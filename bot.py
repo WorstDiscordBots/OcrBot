@@ -1,3 +1,4 @@
+import aiohttp
 from discord.ext import commands
 import discord
 
@@ -39,5 +40,19 @@ async def _help(ctx, *, command_name: str=None):
             description.append("• " + "\n• ".join(entries))
     await ctx.send(embed=discord.Embed(description="\n".join(description), color=ctx.me.color))
 
+@bot.command()
+async def ocr(ctx):
+    "Optical character recognition"
+    if not ctx.message.attachments:
+        return await ctx.send("You must attach a picture!")
+    data = {"requests":[{"features":[{"type":"TEXT_DETECTION"}],"image":{"source":{"imageUri":ctx.message.attachments[0].url}}}]}
+    async with ctx.typing():
+        async with bot.session.post("https://content-vision.googleapis.com/v1/images:annotate", headers=config.headers, json=data, params=config.params) as req:
+            await ctx.send((await req.json())["responses"][0]["textAnnotations"][0]["description"])
+
+async def init_bot():
+    bot.session = aiohttp.ClientSession()
+
 if __name__ == "__main__":
+    bot.loop.create_task(init_bot())
     bot.run(config.token)
