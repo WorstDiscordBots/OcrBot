@@ -16,6 +16,13 @@ async def _can_run(cmd, ctx):
 async def on_ready():
     print(f"{bot.user} is ready!")
 
+@bot.command()
+@commands.is_owner()
+async def poweroff(ctx):
+    """Turns off the bot"""
+    await ctx.send("Bye")
+    await bot.logout()
+
 @bot.command(name="help")
 async def _help(ctx, *, command_name: str=None):
     """A little help always comes handy"""
