@@ -1,2 +1,9 @@
 token = "PLACETHETOKENHERE"
 prefix = ".."
+headers = {
+    "Content-Type": "application/json"
+}
+params = {
+    "alt": "json",
+    "key": "PlaceYourGoogleAPIKeyHere"
+}
